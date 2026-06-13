@@ -3,6 +3,7 @@
 # 🌌 Nex AI Exams
 ### *The Intelligent, Secure, Full-Stack Examination Engine*
 
+[![Live Deployment](https://img.shields.io/badge/live-deployment-success.svg?style=flat-squared&color=10b981)](https://unit-test-gen.onrender.com)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D%2016.0.0-blue.svg?style=flat-squared&color=06b6d4)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-ISC-purple.svg?style=flat-squared&color=8b5cf6)](LICENSE)
 [![Security Status](https://img.shields.io/badge/security-admin--authenticated-red.svg?style=flat-squared)](https://github.com/)

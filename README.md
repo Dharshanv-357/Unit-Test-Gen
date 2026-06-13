@@ -1,69 +1,80 @@
+<div align="center">
+
 # 🌌 Nex AI Exams
+### *The Intelligent, Secure, Full-Stack Examination Engine*
 
-Nex AI Exams is a full-stack, AI-powered examination engine designed for modern educators. Upload syllabus documents, textbook chapters, or course materials, and let the AI generate high-fidelity, pedagogically sound test papers instantly. 
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D%2016.0.0-blue.svg?style=flat-squared&color=06b6d4)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/license-ISC-purple.svg?style=flat-squared&color=8b5cf6)](LICENSE)
+[![Security Status](https://img.shields.io/badge/security-admin--authenticated-red.svg?style=flat-squared)](https://github.com/)
 
-Once generated, teachers can share exams with students, review answers in real-time, and download complete reports—all protected by a secure educator access panel.
+**Nex AI Exams** compiles raw educational course material, textbook chapters, or lecture notes into professionally structured tests in seconds, featuring real-time submission metrics and secure administration.
 
----
+[Demo & Setup](#-quick-start) • [Core Features](#-features) • [Platform Architecture](#-architecture)
 
-## ✨ Features
-
-* **🧠 AI Question Compiler:** Generates diverse question types (Multiple Choice, True/False, Short Answer Essays, and Problem Solving) tailored to specific learning materials.
-* **🎯 Custom Parameters Studio:** Adjust difficulty profiles (Easy, Medium, Hard), total marks, estimated duration, and customize the question distribution matrix.
-* **🌌 Deep Space Aesthetic:** Fully styled dark/light themes featuring glassmorphism panels, glowing ambient gradients, and smooth reactive transitions.
-* **📋 Submissions Dashboard:** Review student answers in real-time. Highlights correct choices, points out wrong selections, and showcases written subjective answers.
-* **🔒 Educator Access Control:** Teacher-facing panels, history data, and student grade sheets are protected by a secure credentials portal.
-* **🔗 Dynamic Exam Sharing:** Share mock tests instantly via unique links and automatically generated QR codes. Local network (LAN) sharing is built-in.
+</div>
 
 ---
 
-## 🛠️ Tech Stack
+## ⚡ Features
 
-* **Frontend:** Vanilla HTML5, CSS3 Variables (Deep Space Navy Theme), and clean ES6 Javascript.
-* **Backend:** Node.js, Express.js.
-* **Parsers:** `pdf-parse` and `mammoth` (for extracting textbook material from PDF and DOCX files).
-* **Network Tunnels:** Localhost.run wrapper integration for public sharing.
+* **🔮 AI Assessment Compiler**
+  * Auto-generates Multiple Choice (MCQ), True/False, Short Essay, and Problem Solving questions directly from your uploads.
+  * Adjusts question ratios, points allocation, and time limits dynamically.
+* **🪐 Deep Space Visual Interface**
+  * Premium, responsive interface featuring glassmorphic panels and glow animations.
+  * Native system-matching Light & Dark parchment themes.
+* **🔒 Gatekeeper Security middleware**
+  * Dashboard, history logs, and grades are secured using custom administrator session tokens.
+  * Student portals (`/view.html`) require no login—only a name and roll number.
+* **📡 Real-Time Analytics Dashboard**
+  * Submissions logs collect and display student percentage rankings.
+  * Per-question review modal highlighting chosen vs. correct answers.
+* **🔗 Dynamic Sharing & LAN Resolution**
+  * Automatically resolves network IP to generate local Wi-Fi share links and scanable QR codes.
+  * Secure public secure tunneling powered by localhost.run is built-in.
 
 ---
 
-## 🚀 Quick Start (Local Setup)
+## 📐 Architecture
 
-### 1. Prerequisites
-Ensure you have [Node.js](https://nodejs.org/) installed (v16+ recommended).
+```mermaid
+flowchart LR
+    A[Textbook/Notes] -->|Upload| B(AI Model API)
+    B -->|Parse Questions| C[Teacher Dashboard]
+    C -->|Generate Share Link| D[Student Quiz Portal]
+    D -->|Submit Answers| E[Live Grades & Metrics]
+    C -.->|Access Protected by| F[Access Login Portal]
+```
 
-### 2. Clone and Install
-Clone the repository and install all dependencies:
+---
+
+## 🚀 Quick Start
+
+### 1. Install Project
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd nex-ai-exams
 npm install
 ```
 
-### 3. Configure Environment Variables
-Create a file named `.env` in the root directory and add your keys and administrator credentials:
+### 2. Configure Credentials (`.env`)
+Create a `.env` file in the root folder:
 ```env
-# AI Service Keys (e.g. Hugging Face key)
-HUGGINGFACE_API_KEY=your_huggingface_key_here
+# AI Model Authentication
+HUGGINGFACE_API_KEY=your_key_here
 
-# Educator Credentials
+# Administration Access
 TEACHER_USERNAME=admin
-TEACHER_PASSWORD=your_secure_password
+TEACHER_PASSWORD=admin123
 ```
 
-### 4. Run the App
-Launch the Express server:
+### 3. Start Local Environment
 ```bash
 node server.js
 ```
-Open your browser and navigate to `http://localhost:3000` to start creating exams!
+* **Dashboard Access:** `http://localhost:3000/login.html`
+* **Student Interface:** `http://localhost:3000/view.html`
 
 ---
 
-## 🛡️ Access Control Policy
-* **Teachers Portal:** Guarded by `/login.html` authentication. Local storage tokens authorize requests to sensitive endpoints (history, submissions, delete operations).
-* **Students Portal:** Zero authentication required. Accessing a quiz via `/view.html?id=SHARE_ID` is fast, public, and requires only a Name and Roll Number.
-
----
-
-## 📜 License
-This project is licensed under the ISC License. Created for educators aiming to streamline modern classroom assessments.
+<div align="center">
+Designed for modern classrooms and secure test execution.
+</div>

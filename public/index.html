@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nex AI Exams</title>
+  <!-- Academic and Technical Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Core Layout Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Educator Security Interceptor -->
+  <script src="auth-client.js"></script>
+</head>
+<body class="dark-theme">
+  <!-- Ambient Graphic Glyphs -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div class="app-container">
+    
+    <!-- HEADER BAR -->
+    <header class="main-header">
+      <div class="logo-area">
+        <span class="logo-badge">EXAM TIMZZZ</span>
+        <div class="logo-text">
+          <h1>Nex AI Exams</h1>
+          <p>AI Exam Engine</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn-icon" title="Toggle Light/Dark Theme">
+          <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <div class="dropdown-history">
+          <button id="history-trigger-btn" class="btn-secondary dropdown-trigger" style="display:flex; align-items:center; gap:8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:1px;"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Exam History
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div id="history-menu" class="history-menu hide">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+        <button id="logout-btn" class="btn-secondary" style="display:flex; align-items:center; gap:8px; border-color: hsla(0, 75%, 60%, 0.25); color: hsl(0, 85%, 65%);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- STEP 1: CONFIGURE & SOURCE PARAMETERS STUDIO (Centered view) -->
+    <section id="step-config-studio" class="wizard-step centered-step-panel">
+      <div class="studio-intro-header">
+        <h2>Design Your Examination</h2>
+        <p>Upload curriculum topics, syllabus notes, or text files, and configure custom academic assessment parameters.</p>
+      </div>
+
+      <div class="glass-card studio-card">
+        <form id="generator-form">
+          <div class="studio-form-grid">
+            
+            <!-- Input Material Block (Left Column) -->
+            <div class="studio-col">
+              <div class="form-group">
+                <label for="rawText">1. Syllabus &amp; Course Material</label>
+                <div class="text-input-wrapper" style="position:relative;">
+                  <textarea id="rawText" placeholder="Paste textbook sections, scientific essays, class notes, or lectures here to build your mock test questions..." required></textarea>
+                  <div class="character-counter"><span id="char-count">0</span> / 40,000 chars</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Or Drop Document File</label>
+                <div id="dropzone" class="upload-dropzone">
+                  <input type="file" id="fileInput" accept=".txt,.pdf,.docx" style="display:none">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="upload-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <p class="dropzone-text">Drag &amp; drop <strong>.txt, .pdf, or .docx</strong></p>
+                  <span class="dropzone-sub">Max size 10MB</span>
+                  <div id="upload-status" class="upload-status-badge hide">File Loaded</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parameters Customization (Right Column) -->
+            <div class="studio-col panel-border-left">
+              <div class="form-group">
+                <label for="examTitle">2. Exam Details</label>
+                <input type="text" id="examTitle" placeholder="e.g., AP European History Chapter 3 Assessment" value="Aether Assessment Exam">
+              </div>
+
+              <div class="grid-2-col">
+                <div class="form-group">
+                  <label for="difficultyProfile">Difficulty Profile</label>
+                  <select id="difficultyProfile">
+                    <option value="Mixed">Mixed Standard</option>
+                    <option value="Easy">Easy (Recall &amp; Basic Terms)</option>
+                    <option value="Medium">Medium (Application &amp; Analysis)</option>
+                    <option value="Hard">Hard (Evaluation &amp; Synthesis)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="customInstructions">Pedagogical Directives</label>
+                  <input type="text" id="customInstructions" placeholder="e.g., use formulas, focus on dynamics">
+                </div>
+              </div>
+
+              <div class="grid-2-col">
+                <div class="form-group">
+                  <label for="examDuration">Time Limit (Minutes)</label>
+                  <input type="number" id="examDuration" min="1" max="300" value="45" placeholder="e.g. 45">
+                </div>
+                <div class="form-group">
+                  <label for="examInstructionsInput">Candidate Instructions</label>
+                  <input type="text" id="examInstructionsInput" placeholder="e.g. Answer all questions..." value="Read all instructions carefully. Answer each question in the fillable blocks. Once complete, click the Submit button at the bottom of the page to evaluate your score and view explanations.">
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="form-group">
+                <label>3. Question Matrix Balance</label>
+                <div class="dist-matrix-grid">
+                  <div class="matrix-input">
+                    <span>MC (Multiple Choice)</span>
+                    <input type="number" id="count-mc" min="0" max="20" value="5" title="Multiple Choice Count">
+                  </div>
+                  <div class="matrix-input">
+                    <span>T/F (True or False)</span>
+                    <input type="number" id="count-tf" min="0" max="20" value="3" title="True or False Count">
+                  </div>
+                  <div class="matrix-input">
+                    <span>Short Answer Essays</span>
+                    <input type="number" id="count-sa" min="0" max="10" value="2" title="Short Answer Count">
+                  </div>
+                  <div class="matrix-input">
+                    <span>Problem Solving</span>
+                    <input type="number" id="count-ps" min="0" max="8" value="1" title="Problem Solving Count">
+                  </div>
+                </div>
+              </div>
+
+              <!-- GRADIENT ACTION BUTTON -->
+              <button type="submit" id="generate-btn" class="btn-primary studio-submit-btn">
+                <span class="btn-text">Generate Academic Mock Exam</span>
+                <div class="btn-spinner hide"></div>
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- STEP 2: ASSEMBLY CHAMBER (Fullscreen Loading Screen) -->
+    <section id="step-loading-chamber" class="wizard-step fullscreen-loader-panel hide">
+      <div class="chamber-core-wrapper">
+        <!-- Spinning Sacred Seal Emblem -->
+        <div class="academic-loader-seal">
+          <div class="seal-outer-orbit"></div>
+          <div class="seal-inner-core">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
+          </div>
+        </div>
+
+        <h3 id="loader-title">Assembling Examination</h3>
+        <p id="loader-subtitle">Please stand by as AetherTest compiles the syllabus elements...</p>
+
+        <!-- Status Progress Steps -->
+        <div class="progress-milestones">
+          <div class="milestone-row active" id="ms-1">
+            <div class="milestone-dot"></div>
+            <span>Extracting textual content and structures...</span>
+          </div>
+          <div class="milestone-row" id="ms-2">
+            <div class="milestone-dot"></div>
+            <span>Analyzing core themes &amp; taxonomy levels...</span>
+          </div>
+          <div class="milestone-row" id="ms-3">
+            <div class="milestone-dot"></div>
+            <span>Generating plausible options and keys...</span>
+          </div>
+          <div class="milestone-row" id="ms-4">
+            <div class="milestone-dot"></div>
+            <span>Structuring step-by-step rubrics &amp; criteria...</span>
+          </div>
+          <div class="milestone-row" id="ms-5">
+            <div class="milestone-dot"></div>
+            <span>Signing final cover sheet &amp; watermarks...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: THE EXAMINATION WORKBENCH (Focus View) -->
+    <section id="step-exam-workbench" class="wizard-step focus-workbench-panel hide">
+      
+      <!-- Top floating Control Panel -->
+      <div class="workbench-bar glass-card">
+        <div class="bar-left">
+          <button id="btn-back-to-studio" class="btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Edit Parameters
+          </button>
+          <div class="view-toggles">
+            <button id="view-student" class="toggle-btn active" data-view="student">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Student Exam
+            </button>
+            <button id="view-teacher" class="toggle-btn" data-view="teacher">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Master Answer Key
+            </button>
+            <button id="view-submissions" class="toggle-btn" data-view="submissions">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              Submissions Dashboard
+            </button>
+          </div>
+        </div>
+
+        <div class="bar-right">
+          <!-- QR and Link Share Action -->
+          <button id="btn-share-exam" class="btn-accent">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            Share Exam Paper
+          </button>
+          
+          <button id="export-pdf" class="btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print Test
+          </button>
+          
+          <div class="dropdown-export">
+            <button id="export-data" class="btn-secondary dropdown-trigger">
+              Export Data
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="export-menu hide">
+              <button id="btn-export-json">Export structured JSON</button>
+              <button id="btn-export-csv">Export questions to CSV</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKBENCH PREVIEW PAPER -->
+      <div id="test-canvas" class="test-canvas-paper student-view">
+        <article class="exam-document-frame">
+          
+          <!-- Cover Heading Block -->
+          <header class="exam-title-block">
+            <div class="exam-heading-main">
+              <h2 id="paper-title" contenteditable="true" class="editable-title">Aether General Syllabus Assessment</h2>
+              <span class="exam-date-badge" id="paper-date">May 2026</span>
+            </div>
+            
+            <div class="exam-metadata-matrix">
+              <div class="meta-cell"><strong>Estimated Duration:</strong> <span id="paper-duration" contenteditable="true">45</span> Minutes</div>
+              <div class="meta-cell"><strong>Total Marks:</strong> <span id="paper-points">35</span> Points</div>
+            </div>
+
+            <!-- CANDIDATE REGISTRATION CARD -->
+            <div class="candidate-blank-fields">
+              <div class="candidate-row">
+                <div class="candidate-input-group">
+                  <label>Candidate Name</label>
+                  <input type="text" placeholder="Enter candidate name..." disabled>
+                </div>
+                <div class="candidate-input-group">
+                  <label>Roll Number</label>
+                  <input type="text" placeholder="Enter roll number..." disabled>
+                </div>
+                <div class="candidate-input-group" style="max-width: 140px;">
+                  <label>Final Score</label>
+                  <div class="score-assigned-value">-- / <span id="preview-marks-total-badge">0</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="instructions-banner">
+              <strong>INSTRUCTIONS TO CANDIDATES:</strong>
+              <p id="paper-general-instructions" contenteditable="true">
+                Read all instructions carefully. Answer each section as designated. Ensure spelling, sentence structures, and factual precision are maintained. Hand in this cover sheet upon completion.
+              </p>
+            </div>
+          </header>
+
+          <!-- Rendered Questions Holder -->
+          <div id="exam-sections-holder"></div>
+
+        </article>
+      </div>
+
+      <!-- SUBMISSIONS DASHBOARD PANEL -->
+      <div id="submissions-canvas" class="test-canvas-paper hide">
+        <article class="exam-document-frame">
+          <header class="exam-title-block">
+            <div class="exam-heading-main">
+              <h2 class="editable-title" style="border:none; cursor:default; font-size: 26px; padding:0;">Quiz Submissions Dashboard</h2>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <button id="btn-review-exam" class="btn-accent" style="padding: 8px 16px; font-size: 12px; display:flex; align-items:center; gap:6px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  Review Exam
+                </button>
+                <button id="btn-refresh-submissions" class="btn-secondary" style="padding: 8px 14px; font-size: 12px; display:flex; align-items:center; gap:6px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                  Refresh Data
+                </button>
+              </div>
+            </div>
+            
+            <div class="exam-metadata-matrix" style="margin-top: 14px;">
+              <div class="meta-cell"><strong>Total Submissions:</strong> <span id="stats-count">0</span></div>
+              <div class="meta-cell"><strong>Class Average:</strong> <span id="stats-avg">--</span>%</div>
+              <div class="meta-cell"><strong>Highest Score:</strong> <span id="stats-high">--</span></div>
+            </div>
+          </header>
+
+          <div class="submissions-list-wrapper">
+            <div class="glass-card submissions-table-card">
+              <table class="submissions-table">
+                <thead>
+                  <tr>
+                    <th>Candidate Name</th>
+                    <th>Roll Number</th>
+                    <th>Date Submitted</th>
+                    <th>Score</th>
+                    <th>Percentage</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="submissions-table-body">
+                  <tr>
+                    <td colspan="6" class="empty-table-message">No student submissions recorded yet. Share the exam link to collect responses!</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- SHARE DIALOG MODAL (Floating Overlay) -->
+  <div id="share-modal" class="share-modal-overlay hide">
+    <div class="share-card glass-card">
+      <div class="share-header">
+        <h3>Share Mock Test Paper</h3>
+        <button id="btn-close-share" class="btn-icon-close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="share-body">
+        <p>Anyone with this link can view the generated exam, practice in student view, or print it out.</p>
+        
+        <!-- Shareable Link Copy Inputs -->
+        <div class="share-links-container" style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+          <div class="form-group">
+            <label style="font-size:10px; font-weight:700; color:var(--color-secondary);">Local Link (For your browser)</label>
+            <div class="share-link-row" style="display:flex; gap:8px; width:100%;">
+              <input type="text" id="share-url-input" readonly value="" style="flex:1;">
+              <button id="btn-copy-url" class="btn-primary" style="padding:10px 16px; white-space:nowrap;">Copy Local</button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label style="font-size:10px; font-weight:700; color:var(--color-primary-hover);">Global Internet Link (Share with anyone, anywhere!)</label>
+            <div class="share-link-row" style="display:flex; gap:8px; width:100%;">
+              <input type="text" id="share-url-lan-input" readonly value="" style="flex:1;">
+              <button id="btn-copy-lan-url" class="btn-accent" style="padding:10px 16px; white-space:nowrap;">Copy Public Link</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="share-qr-section">
+          <div class="qr-container-box">
+            <!-- Dynamic QR Code Loader -->
+            <img id="share-qr-image" src="" alt="Scan QR Code to view examination">
+          </div>
+          <div class="qr-info">
+            <h4>Practice on Mobile</h4>
+            <p>Scan this QR code with your smartphone or tablet camera to instantly view and print this examination on your mobile device.</p>
+          </div>
+        </div>
+
+        <!-- Global Internet Connection Troubleshooting Box -->
+        <div class="network-troubleshoot-box" style="margin-top:20px; padding:12px 16px; background:hsla(42,65%,52%,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:var(--radius-sm); font-size:12px; line-height:1.5;">
+          <strong style="color:var(--color-secondary); display:block; margin-bottom:4px; font-weight:700;">🌐 Globally Shareable Link Active</strong>
+          <span style="color:var(--text-muted);">
+            Anyone on the internet can scan the QR code or click the <strong>Global Internet Link</strong> to attend this assessment and submit responses, regardless of what network or Wi-Fi they are connected to!
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Client-Side State Controller -->
+  <script src="app.js" defer></script>
+</body>
+</html>

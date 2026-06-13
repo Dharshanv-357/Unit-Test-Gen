@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Local Environment Variables (API Keys, Passwords)
+.env
+
+# Saved Exams & Student Submissions (Exam Data)
+shares/
+
+# Logs and system files
+*.log
+.DS_Store
+Thumbs.db

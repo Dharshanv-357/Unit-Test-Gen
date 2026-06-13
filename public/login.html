@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Access Portal - Nex AI Exams</title>
+  <!-- Academic and Technical Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Core Layout Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 24px;
+      box-sizing: border-box;
+      z-index: 10;
+      position: relative;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid var(--panel-border);
+      background: var(--panel-bg);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo {
+      display: inline-flex;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-family: var(--font-title);
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+    }
+    .login-title {
+      font-family: var(--font-title);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0 0 8px 0;
+      letter-spacing: -0.5px;
+    }
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .login-alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 24px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+    .login-alert.danger {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid var(--color-danger);
+      color: var(--color-danger);
+    }
+    .login-submit-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: var(--font-title);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.15);
+      margin-top: 8px;
+    }
+    .login-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+      filter: brightness(1.1);
+    }
+    .login-submit-btn:active {
+      transform: translateY(0);
+    }
+    .login-submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+  <script>
+    // Redirect back to dashboard if they are already logged in
+    if (localStorage.getItem('teacher_token')) {
+      window.location.href = '/index.html';
+    }
+  </script>
+</head>
+<body class="dark-theme" style="margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 100vh;">
+  <!-- Hydrate light/dark theme preference before first paint -->
+  <script>
+    const savedTheme = localStorage.getItem('aethertest-theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      document.body.classList.remove('dark-theme');
+    }
+  </script>
+
+  <!-- Ambient Space Nebula Blurs -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Viewport Floating Theme Toggle Button -->
+  <div style="position: absolute; top: 24px; right: 24px; z-index: 100;">
+    <button id="theme-toggle" class="btn-icon" title="Toggle Light/Dark Theme" style="background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 50%; padding: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: all 0.2s;">
+      <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+  </div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <span class="login-logo">EXAM STUDIO</span>
+        <h1 class="login-title">Nex AI Exams</h1>
+        <p class="login-subtitle">Educator Administration Portal</p>
+      </div>
+
+      <!-- Alert Banner for Errors -->
+      <div id="error-alert" class="login-alert danger">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span id="error-msg">Incorrect credentials. Please try again.</span>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="username" style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 13px; color: var(--text-main);">Administrator Username</label>
+          <input type="text" id="username" placeholder="Enter administrative username..." required style="width: 100%; box-sizing: border-box; background: var(--input-bg); border: 1px solid var(--input-border); padding: 12px 16px; border-radius: 8px; color: var(--text-main); font-family: var(--font-body); font-size: 14px; transition: border-color 0.2s;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 24px;">
+          <label for="password" style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 13px; color: var(--text-main);">Security Password</label>
+          <input type="password" id="password" placeholder="Enter teacher password..." required style="width: 100%; box-sizing: border-box; background: var(--input-bg); border: 1px solid var(--input-border); padding: 12px 16px; border-radius: 8px; color: var(--text-main); font-family: var(--font-body); font-size: 14px; transition: border-color 0.2s;">
+        </div>
+
+        <button type="submit" id="submit-btn" class="login-submit-btn">
+          <span>Access Dashboard</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        Protected by educator access control policy.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const errorAlert = document.getElementById('error-alert');
+    const errorMsg = document.getElementById('error-msg');
+    
+    // Theme toggle control
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const bodyEl = document.body;
+
+    themeToggleBtn.addEventListener('click', () => {
+      bodyEl.classList.toggle('light-theme');
+      bodyEl.classList.toggle('dark-theme');
+      const isLight = bodyEl.classList.contains('light-theme');
+      localStorage.setItem('aethertest-theme', isLight ? 'light' : 'dark');
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      // Reset alert state
+      errorAlert.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.querySelector('span').textContent = 'Authorizing...';
+
+      try {
+        const res = await fetch('/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Authorization failed.');
+        }
+
+        // Store token and redirect
+        localStorage.setItem('teacher_token', data.token);
+        window.location.href = '/index.html';
+      } catch (err) {
+        console.error('Login error:', err);
+        errorMsg.textContent = err.message;
+        errorAlert.style.display = 'flex';
+        submitBtn.disabled = false;
+        submitBtn.querySelector('span').textContent = 'Access Dashboard';
+      }
+    });
+  </script>
+</body>
+</html>

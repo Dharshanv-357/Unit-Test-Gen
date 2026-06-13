@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherForms // Shared Assessment Portal</title>
+  <!-- Academic and Technical Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Reuse our main visual stylesheet to guarantee identical design aesthetics -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background-color: var(--bg-app);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    
+    .viewer-app-container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .viewer-loading-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 50vh;
+      width: 100%;
+      text-align: center;
+    }
+
+    .viewer-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--glass-shadow);
+      width: 100%;
+    }
+
+    .viewer-logo-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .viewer-logo-section h2 {
+      font-size: 20px;
+      font-family: var(--font-display);
+      line-height: 1.1;
+      color: var(--color-secondary);
+    }
+
+    .viewer-logo-section span {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+
+    .viewer-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ==========================================================================
+       Microsoft/Google Forms Layout Overrides
+       ========================================================================== */
+    
+    /* Make the base document frame background transparent in the viewer */
+    #viewer-panel .exam-document-frame {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+
+    /* Title Block Card */
+    #viewer-panel .exam-title-block {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--glass-shadow);
+      position: relative;
+      overflow: hidden;
+      /* Signature Google/MS Forms top banner accent */
+      border-top: 8px solid var(--color-primary); 
+      margin-bottom: 24px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .light-theme #viewer-panel .exam-title-block {
+      background: hsl(36, 32%, 96%) !important;
+      border-color: hsl(38, 20%, 82%) !important;
+    }
+
+    /* Remove stamp and date offset */
+    #viewer-panel .seal-stamp-header {
+      display: none !important; /* Forms don't need retro ink stamps */
+    }
+
+    #viewer-panel .exam-heading-main {
+      padding-right: 0 !important;
+    }
+
+    /* Separate Questions into Individual Cards */
+    #viewer-panel .question-item-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+      transition: var(--transition-smooth);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .light-theme #viewer-panel .question-item-card {
+      background: white !important;
+      border-color: hsl(38, 20%, 86%) !important;
+    }
+
+    #viewer-panel .question-item-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* Section Wrapper Formatting */
+    #viewer-panel .exam-section-wrapper {
+      margin-bottom: 32px;
+    }
+
+    #viewer-panel .section-hdr-container {
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+      margin-bottom: 16px;
+      margin-top: 12px;
+    }
+
+    #viewer-panel .section-hdr-container h3 {
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: var(--color-secondary);
+      font-weight: 700;
+    }
+
+    /* Registration / Candidate Details Card */
+    #viewer-panel .candidate-blank-fields {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--glass-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .light-theme #viewer-panel .candidate-blank-fields {
+      background: white !important;
+      border-color: hsl(38, 20%, 86%) !important;
+    }
+
+    #viewer-panel .candidate-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    #viewer-panel .candidate-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    #viewer-panel .candidate-input-group label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    #viewer-panel .candidate-input-group input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 13.5px;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .light-theme #viewer-panel .candidate-input-group input {
+      background: hsl(0, 0%, 98%);
+      border-color: hsl(38, 15%, 82%);
+      color: var(--text-dark);
+    }
+
+    #viewer-panel .candidate-input-group input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px hsla(220, 75%, 62%, 0.15);
+    }
+
+    #viewer-panel .score-assigned-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--color-secondary);
+      padding: 8px 0;
+    }
+
+    /* Forms Interactive Selectable Panels */
+    #viewer-panel .option-node.interactive-selectable {
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .light-theme #viewer-panel .option-node.interactive-selectable {
+      background: hsl(0, 0%, 98%);
+      border-color: hsl(38, 15%, 82%);
+    }
+
+    #viewer-panel .option-node.interactive-selectable:hover {
+      border-color: var(--color-primary);
+      background: hsla(220, 75%, 62%, 0.03);
+    }
+
+    /* Modern active selection highlights using CSS :has() */
+    #viewer-panel .option-node.interactive-selectable:has(input[type="radio"]:checked) {
+      border-color: var(--color-primary) !important;
+      background: hsla(220, 75%, 62%, 0.08) !important;
+      box-shadow: 0 0 0 2px hsla(220, 75%, 62%, 0.2);
+    }
+
+    #viewer-panel .option-node.interactive-selectable:has(input[type="radio"]:checked) .opt-badge {
+      background: var(--color-primary) !important;
+      color: white !important;
+      border-color: var(--color-primary) !important;
+    }
+
+    #viewer-panel .option-node.interactive-selectable:has(input[type="radio"]:checked) .opt-text {
+      font-weight: 600;
+    }
+
+    /* Forms Progress Tracker styling */
+    .forms-progress-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-md);
+      padding: 16px 24px;
+      box-shadow: var(--glass-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 16px;
+      z-index: 100;
+      margin-bottom: 8px;
+      transition: var(--transition-smooth);
+    }
+
+    .light-theme .forms-progress-card {
+      background: hsla(0, 0%, 100%, 0.9);
+      border-color: hsl(38, 20%, 84%);
+    }
+
+    .progress-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .progress-details span {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .progress-details strong {
+      color: var(--color-primary);
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+    .progress-bar-rail {
+      width: 100%;
+      height: 8px;
+      background: var(--input-bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      border-radius: 4px;
+      transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      width: 0%;
+    }
+
+    /* Correct/wrong answers cards overrides after submission */
+    .teacher-view .question-item-card:has(.evaluation-badge-right.eval-correct) {
+      border-color: hsl(142, 70%, 45%) !important;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.06);
+    }
+
+    .teacher-view .question-item-card:has(.evaluation-badge-right.eval-incorrect) {
+      border-color: var(--color-danger) !important;
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.06);
+    }
+
+    .teacher-view .question-item-card:has(.evaluation-badge-right.eval-subjective) {
+      border-color: var(--color-primary) !important;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.06);
+    }
+
+    #viewer-panel .btn-clear-selection:hover {
+      color: var(--color-danger) !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+    }
+
+    /* Disable pencil editing indicators in student viewer */
+    #viewer-panel .q-prompt-text,
+    #viewer-panel .opt-text,
+    #viewer-panel .editable-explanation {
+      cursor: default !important;
+    }
+    #viewer-panel .q-prompt-text::after,
+    #viewer-panel .opt-text::after,
+    #viewer-panel .editable-explanation::after {
+      display: none !important;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; transform: scale(1.03); }
+    }
+
+    /* Forms textareas override */
+    #viewer-panel .forms-essay-input {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Print styles tidy */
+    @media print {
+      .forms-progress-card, .btn-submit-exam, .forms-submit-container {
+        display: none !important;
+      }
+      #viewer-panel .exam-document-frame {
+        background: white !important;
+        color: black !important;
+      }
+      #viewer-panel .exam-title-block, #viewer-panel .question-item-card, #viewer-panel .candidate-blank-fields {
+        background: transparent !important;
+        border: 1px solid black !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+      }
+      #viewer-panel .candidate-input-group input {
+        border: none !important;
+        border-bottom: 1px dashed black !important;
+        background: transparent !important;
+        color: black !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="dark-theme">
+  <!-- Ambient Accents -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <div class="viewer-app-container">
+    
+    <!-- LOADING BACKEND CALL -->
+    <div id="viewer-loading" class="viewer-loading-wrapper">
+      <div class="academic-loader-seal">
+        <div class="seal-outer-orbit"></div>
+        <div class="seal-inner-core">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
+        </div>
+      </div>
+      <h3 style="font-family: var(--font-seal); letter-spacing: 0.05em; color: var(--text-main);">Retrieving Exam Sheet</h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Loading shared interactive questionnaire from database...</p>
+    </div>
+
+    <!-- ERROR SCREEN -->
+    <div id="viewer-error" class="viewer-loading-wrapper hide">
+      <div class="icon-blob" style="background: rgba(239, 68, 68, 0.08); color: var(--color-danger); width: 80px; height: 80px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+      </div>
+      <h3 style="margin-top: 16px; font-size: 20px;">Assessment Link Missing</h3>
+      <p id="error-desc-msg" style="font-size: 13.5px; color: var(--text-muted); max-width: 400px; margin-top: 8px;">The shared quiz sheet link is invalid or has expired.</p>
+    </div>
+
+    <!-- MAIN VIEWER PANEL (Visible on Success) -->
+    <div id="viewer-panel" class="hide" style="display:flex; flex-direction:column; gap:20px; width: 100%;">
+      
+      <!-- Shared Toolbar -->
+      <div class="viewer-header-bar">
+        <div class="viewer-logo-section">
+          <h2>AetherForms</h2>
+          <span>Interactive Exam Workspace</span>
+        </div>
+        <div class="viewer-actions">
+          <button id="btn-print" class="btn-secondary" style="padding: 10px 18px; font-size: 13px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print Paper
+          </button>
+        </div>
+      </div>
+
+      <!-- Quiz Progress Tracker Indicator -->
+      <div id="forms-progress-tracker" class="forms-progress-card hide">
+        <div class="progress-details">
+          <span>Quiz Completion Progress</span>
+          <strong id="progress-text-display">0 of 0 questions answered</strong>
+        </div>
+        <div class="progress-bar-rail">
+          <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="progress-details" style="margin-top: 8px; border-top: 1px solid var(--panel-border); padding-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <span>Time Remaining</span>
+          <strong id="timer-countdown" style="font-family: monospace; font-size: 14px; color: var(--color-primary); transition: var(--transition-smooth);">--:--</strong>
+        </div>
+      </div>
+
+      <!-- Printable Document Canvas -->
+      <div id="test-canvas" class="test-canvas-paper student-view" style="padding: 0;">
+        
+        <!-- Results Hero Card Holder (Appended upon submission) -->
+        <div id="results-hero-holder"></div>
+
+        <article class="exam-document-frame">
+          
+          <header class="exam-title-block">
+            <div class="exam-heading-main">
+              <h2 id="paper-title" class="editable-title">Aether General Syllabus Assessment</h2>
+              <span class="exam-date-badge" id="paper-date">May 2026</span>
+            </div>
+            
+            <div class="exam-metadata-matrix">
+              <div class="meta-cell"><strong>Estimated Duration:</strong> <span id="paper-duration">45</span> Minutes</div>
+              <div class="meta-cell"><strong>Total Marks:</strong> <span id="paper-points">35</span> Points</div>
+            </div>
+
+            <!-- CANDIDATE REGISTRATION CARD -->
+            <div class="candidate-blank-fields">
+              <div class="candidate-row">
+                <div class="candidate-input-group">
+                  <label>Candidate Name</label>
+                  <input type="text" id="candidate-name-field" placeholder="Enter your full name..." required>
+                </div>
+                <div class="candidate-input-group">
+                  <label>Roll Number</label>
+                  <input type="text" id="candidate-roll-field" placeholder="Enter your roll number..." required>
+                </div>
+                <div class="candidate-input-group" style="max-width: 140px;">
+                  <label>Final Score</label>
+                  <div class="score-assigned-value" id="score-assigned-display">-- / <span id="marks-total-badge">35</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="instructions-banner">
+              <strong>INSTRUCTIONS TO CANDIDATES:</strong>
+              <p id="paper-general-instructions">
+                Read all instructions carefully. Answer each question in the fillable blocks. Once complete, click the Submit button at the bottom of the page to evaluate your score and view explanations.
+              </p>
+            </div>
+          </header>
+
+          <form id="student-form-quiz">
+            <div id="exam-sections-holder"></div>
+            
+            <!-- SUBMIT BUTTON DRAWER -->
+            <div class="forms-submit-container" id="forms-submit-drawer">
+              <button type="submit" class="btn-submit-exam" id="btn-submit-quiz">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Submit Examination Answers
+              </button>
+            </div>
+          </form>
+
+        </article>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let activeSharedState = null;
+    let autoScorablePoints = 0;
+    let earnedScorablePoints = 0;
+    let globalShareId = null;
+    let timerInterval = null;
+
+    function startCountdownTimer(minutes) {
+      if (timerInterval) clearInterval(timerInterval);
+      
+      let secondsRemaining = minutes * 60;
+      const timerDisplay = document.getElementById('timer-countdown');
+      
+      function updateTimer() {
+        if (secondsRemaining <= 0) {
+          clearInterval(timerInterval);
+          if (timerDisplay) {
+            timerDisplay.textContent = "00:00 - EXPIRED";
+            timerDisplay.style.color = "var(--color-danger)";
+          }
+          alert("Time has expired! Your exam sheet is being submitted automatically.");
+          
+          // Programmatically trigger the form evaluation and submit
+          const form = document.getElementById('student-form-quiz');
+          if (form) {
+            evaluateStudentQuiz({ preventDefault: () => {}, detail: { autoSubmit: true } });
+          }
+          return;
+        }
+        
+        secondsRemaining--;
+        
+        const mins = Math.floor(secondsRemaining / 60);
+        const secs = secondsRemaining % 60;
+        
+        const formattedTime = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        
+        if (timerDisplay) {
+          timerDisplay.textContent = formattedTime;
+          
+          if (secondsRemaining < 60) {
+            timerDisplay.style.color = "var(--color-danger)";
+            timerDisplay.style.fontWeight = "bold";
+            timerDisplay.style.animation = "pulse 1s infinite alternate";
+          }
+        }
+      }
+      
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function clearSelection(qId) {
+      const radios = document.querySelectorAll(`input[name="q-${qId}"]`);
+      radios.forEach(r => {
+        r.checked = false;
+      });
+      
+      const clearBtn = document.getElementById(`clear-btn-${qId}`);
+      if (clearBtn) {
+        clearBtn.classList.add('hide');
+      }
+      
+      updateProgressTracker();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Theme configuration
+      const savedTheme = localStorage.getItem('aethertest-theme') || 'dark';
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        document.body.classList.remove('dark-theme');
+      }
+
+      const btnPrint = document.getElementById('btn-print');
+      btnPrint.addEventListener('click', () => window.print());
+
+      // Submit Form
+      const studentQuizForm = document.getElementById('student-form-quiz');
+      studentQuizForm.addEventListener('submit', evaluateStudentQuiz);
+
+      // Retrieve Share ID and Fetch
+      const urlParams = new URLSearchParams(window.location.search);
+      const shareId = urlParams.get('id');
+      globalShareId = shareId;
+
+      if (!shareId) {
+        showError('No share ID provided in the URL search query. Please double-check your link.');
+        return;
+      }
+
+      fetchShareData(shareId);
+    });
+
+    async function fetchShareData(id) {
+      const loadingScreen = document.getElementById('viewer-loading');
+      const panelScreen = document.getElementById('viewer-panel');
+
+      try {
+        const response = await fetch(`/api/v1/share/${id}`);
+        if (!response.ok) {
+          const errData = await response.json();
+          throw new Error(errData.error || 'Paper not found in database.');
+        }
+
+        const testData = await response.json();
+        activeSharedState = testData;
+
+        // Render
+        renderSharedExam(testData);
+        
+        // Start countdown timer
+        const durationMinutes = parseInt(testData.examMetadata.estimatedDurationMinutes) || 45;
+        startCountdownTimer(durationMinutes);
+        
+        loadingScreen.classList.add('hide');
+        panelScreen.classList.remove('hide');
+      } catch (err) {
+        console.error(err);
+        showError(err.message);
+      }
+    }
+
+    function showError(msg) {
+      document.getElementById('viewer-loading').classList.add('hide');
+      const errorScreen = document.getElementById('viewer-error');
+      document.getElementById('error-desc-msg').textContent = msg;
+      errorScreen.classList.remove('hide');
+    }
+
+    function renderSharedExam(state) {
+      const meta = state.examMetadata;
+      
+      document.getElementById('paper-title').textContent = meta.title;
+      document.getElementById('paper-duration').textContent = meta.estimatedDurationMinutes;
+      document.getElementById('paper-points').textContent = meta.totalPoints;
+      document.getElementById('marks-total-badge').textContent = meta.totalPoints;
+      
+      const diffEl = document.getElementById('paper-diff');
+      if (diffEl) diffEl.textContent = meta.difficultyProfile;
+
+      if (meta.instructions) {
+        document.getElementById('paper-general-instructions').textContent = meta.instructions;
+      }
+
+      document.getElementById('paper-date').textContent = new Date(meta.generatedDate || Date.now()).toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric'
+      });
+
+      const sectionsHolder = document.getElementById('exam-sections-holder');
+      sectionsHolder.innerHTML = '';
+
+      autoScorablePoints = 0; // Reset scorable threshold counter
+
+      state.sections.forEach((section, sIdx) => {
+        if (section.questions.length === 0) return;
+
+        const sectionEl = document.createElement('section');
+        sectionEl.className = 'exam-section-wrapper';
+        
+        sectionEl.innerHTML = `
+          <div class="section-hdr-container">
+            <h3>${section.sectionTitle}</h3>
+            <p class="section-instructions">${section.instructions}</p>
+          </div>
+          <div class="questions-list-wrapper"></div>
+        `;
+
+        const qListWrapper = sectionEl.querySelector('.questions-list-wrapper');
+
+        section.questions.forEach((q, qIdx) => {
+          const qCard = document.createElement('div');
+          qCard.className = `question-item-card`;
+          qCard.id = `q-card-${q.id}`;
+
+          let choicesMarkup = '';
+          if (q.questionType === 'multiple-choice' || q.questionType === 'true-false') {
+            const tfClass = q.questionType === 'true-false' ? 'tf-options' : '';
+            choicesMarkup = `<div class="options-stack ${tfClass}">`;
+            
+            // Add Scorable items
+            autoScorablePoints += q.points;
+
+            q.options.forEach((opt, oIdx) => {
+              choicesMarkup += `
+                <label class="option-node interactive-selectable" id="opt-node-${q.id}-${opt.key}">
+                  <input type="radio" class="forms-radio-input" name="q-${q.id}" value="${opt.key}">
+                  <span class="opt-badge">${opt.key}</span>
+                  <span class="opt-text">${opt.text}</span>
+                </label>
+              `;
+            });
+            choicesMarkup += `</div>`;
+            
+            choicesMarkup += `
+              <div class="mcq-reset-row" style="margin-top: 12px; display: flex; justify-content: flex-end;">
+                <button type="button" class="btn-clear-selection hide" id="clear-btn-${q.id}" onclick="clearSelection('${q.id}')" style="background: transparent; border: none; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: var(--transition-smooth); padding: 4px 8px; border-radius: var(--radius-sm); outline: none;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+                  Clear Selection
+                </button>
+              </div>
+            `;
+          } else {
+            choicesMarkup = `
+              <textarea class="forms-essay-input" name="essay-${q.id}" placeholder="Type your written answer steps here. Invigilators can grade your steps based on criteria rubrics..."></textarea>
+            `;
+          }
+
+          const keyDrawerMarkup = `
+            <div class="master-key-drawer" id="key-drawer-${q.id}">
+              <h4>Pedagogical Explanation</h4>
+              <div class="ans-badge">Expected Answer: ${q.correctAnswer}</div>
+              <p class="drawer-text">${q.explanation}</p>
+              ${q.rubric && q.rubric.length > 0 ? `
+                <div class="sub-divider"></div>
+                <h4>Partial Marks Criteria</h4>
+                <div class="rubric-list">
+                  ${q.rubric.map(step => `
+                    <div class="rubric-item">
+                      <span class="drawer-text">${step.step}</span>
+                      <strong>+${step.pointsAllocated} pts</strong>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+
+            qCard.innerHTML = `
+              <div class="q-title-row">
+                <span class="q-number">${q.questionNumber}</span>
+                <div class="q-prompt-text">${q.prompt}</div>
+                <span class="q-marks-tag" id="badge-points-${q.id}">[${q.points} Marks]</span>
+              </div>
+              ${choicesMarkup}
+              ${keyDrawerMarkup}
+            `;
+
+          qListWrapper.appendChild(qCard);
+        });
+
+        sectionsHolder.appendChild(sectionEl);
+      });
+
+      // Update total points metrics limit
+      document.getElementById('marks-total-badge').textContent = autoScorablePoints;
+
+      // Unhide the progress tracker card
+      const progressTracker = document.getElementById('forms-progress-tracker');
+      if (progressTracker) progressTracker.classList.remove('hide');
+      
+      // Initialize progress
+      updateProgressTracker();
+      
+      // Listen to inputs
+      const formQuiz = document.getElementById('student-form-quiz');
+      formQuiz.addEventListener('change', updateProgressTracker);
+      formQuiz.addEventListener('input', updateProgressTracker);
+    }
+
+    /**
+     * Real-time Interactive Progress Tracker
+     */
+    function updateProgressTracker() {
+      if (!activeSharedState) return;
+      
+      let totalQuestionsCount = 0;
+      let answeredQuestionsCount = 0;
+      
+      activeSharedState.sections.forEach(section => {
+        section.questions.forEach(q => {
+          totalQuestionsCount++;
+          
+          if (q.questionType === 'multiple-choice' || q.questionType === 'true-false') {
+            const checkedInput = document.querySelector(`input[name="q-${q.id}"]:checked`);
+            const clearBtn = document.getElementById(`clear-btn-${q.id}`);
+            if (checkedInput) {
+              answeredQuestionsCount++;
+              if (clearBtn) clearBtn.classList.remove('hide');
+            } else {
+              if (clearBtn) clearBtn.classList.add('hide');
+            }
+          } else {
+            const txtArea = document.querySelector(`textarea[name="essay-${q.id}"]`);
+            if (txtArea && txtArea.value.trim().length > 0) {
+              answeredQuestionsCount++;
+            }
+          }
+        });
+      });
+      
+      const progressTextDisplay = document.getElementById('progress-text-display');
+      const progressBarFill = document.getElementById('progress-bar-fill');
+      
+      if (progressTextDisplay && progressBarFill) {
+        progressTextDisplay.textContent = `${answeredQuestionsCount} of ${totalQuestionsCount} questions answered`;
+        const percentage = totalQuestionsCount > 0 ? Math.round((answeredQuestionsCount / totalQuestionsCount) * 100) : 0;
+        progressBarFill.style.width = `${percentage}%`;
+      }
+    }
+
+    /**
+     * Microsoft Forms Style Evaluator Engine
+     */
+    function evaluateStudentQuiz(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      
+      // Enforce Name & Roll Number validation for manual submissions
+      const nameInput = document.getElementById('candidate-name-field');
+      const rollInput = document.getElementById('candidate-roll-field');
+      
+      let candidateName = nameInput ? nameInput.value.trim() : '';
+      let rollNumber = rollInput ? rollInput.value.trim() : '';
+
+      const isAutoSubmit = e && e.detail && e.detail.autoSubmit;
+      
+      if (!isAutoSubmit) {
+        if (candidateName === '') {
+          alert('Candidate Name is required to submit the exam.');
+          if (nameInput) nameInput.focus();
+          return;
+        }
+        if (rollNumber === '') {
+          alert('Roll Number is required to submit the exam.');
+          if (rollInput) rollInput.focus();
+          return;
+        }
+
+        if (!confirm('Are you ready to submit your answers and view your immediate assessment evaluations?')) {
+          return;
+        }
+      } else {
+        // Auto-fill placeholders for empty fields in time-expired submissions
+        if (candidateName === '') {
+          candidateName = 'Time Out - Unnamed Candidate';
+          if (nameInput) nameInput.value = candidateName;
+        }
+        if (rollNumber === '') {
+          rollNumber = 'Time Out - No Roll';
+          if (rollInput) rollInput.value = rollNumber;
+        }
+      }
+
+      // Stop countdown timer immediately
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+      
+      // Update timer display
+      const timerDisplay = document.getElementById('timer-countdown');
+      if (timerDisplay) {
+        timerDisplay.textContent = "SUBMITTED";
+        timerDisplay.style.color = "hsl(142, 70%, 45%)";
+        timerDisplay.style.animation = "none";
+      }
+
+      // Hide progress bar and submit drawer
+      document.getElementById('forms-progress-tracker').classList.add('hide');
+      document.getElementById('forms-submit-drawer').classList.add('hide');
+      document.getElementById('test-canvas').className = 'test-canvas-paper teacher-view';
+
+      // Hide all reset buttons on submission
+      document.querySelectorAll('.btn-clear-selection').forEach(btn => btn.classList.add('hide'));
+
+      // Disable registration inputs
+      if (nameInput) nameInput.disabled = true;
+      if (rollInput) rollInput.disabled = true;
+
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let studentEarnedPoints = 0;
+
+      activeSharedState.sections.forEach(section => {
+        section.questions.forEach(q => {
+          const qCard = document.getElementById(`q-card-${q.id}`);
+          const promptBadge = document.getElementById(`badge-points-${q.id}`);
+
+          if (q.questionType === 'multiple-choice' || q.questionType === 'true-false') {
+            const checkedInput = document.querySelector(`input[name="q-${q.id}"]:checked`);
+            const studentSelection = checkedInput ? checkedInput.value : null;
+
+            if (!studentSelection) {
+              // Unanswered MCQ / True-False
+              incorrectCount++;
+              promptBadge.innerHTML = `
+                <span class="evaluation-badge-right eval-incorrect" style="background: rgba(239, 68, 68, 0.08); color: var(--color-danger); border: 1px solid var(--color-danger); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                  Unanswered (0 / ${q.points} pts)
+                </span>
+              `;
+
+              // Highlight the correct answer anyway, but show no selected wrong choice
+              q.options.forEach(opt => {
+                const optNode = document.getElementById(`opt-node-${q.id}-${opt.key}`);
+                if (optNode) {
+                  optNode.classList.remove('interactive-selectable');
+                  if (opt.key === q.correctAnswer) {
+                    optNode.classList.add('student-selected-correct');
+                  }
+                }
+              });
+
+              // Disable input fields
+              document.querySelectorAll(`input[name="q-${q.id}"]`).forEach(inp => inp.disabled = true);
+            } else {
+              const isCorrect = studentSelection === q.correctAnswer;
+
+              // Highlight Option Nodes
+              q.options.forEach(opt => {
+                const optNode = document.getElementById(`opt-node-${q.id}-${opt.key}`);
+                if (optNode) {
+                  optNode.classList.remove('interactive-selectable');
+                  
+                  if (opt.key === q.correctAnswer) {
+                    optNode.classList.add('student-selected-correct');
+                  } else if (studentSelection === opt.key && !isCorrect) {
+                    optNode.classList.add('student-selected-wrong');
+                  }
+                }
+              });
+
+              // Make radio inputs disabled
+              document.querySelectorAll(`input[name="q-${q.id}"]`).forEach(inp => inp.disabled = true);
+
+              // Append Right/Wrong Badges
+              if (isCorrect) {
+                studentEarnedPoints += q.points;
+                correctCount++;
+                promptBadge.innerHTML = `
+                  <span class="evaluation-badge-right eval-correct" style="background: rgba(16, 185, 129, 0.08); color: hsl(142, 70%, 45%); border: 1px solid hsl(142, 70%, 45%); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Correct (+${q.points} pts)
+                  </span>
+                `;
+              } else {
+                incorrectCount++;
+                promptBadge.innerHTML = `
+                  <span class="evaluation-badge-right eval-incorrect" style="background: rgba(239, 68, 68, 0.08); color: var(--color-danger); border: 1px solid var(--color-danger); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    Incorrect (0 / ${q.points} pts)
+                  </span>
+                `;
+              }
+            }
+
+          } else {
+            // Subjective items: disable textareas and append self-grade tags
+            const txtArea = document.querySelector(`textarea[name="essay-${q.id}"]`);
+            const studentText = txtArea ? txtArea.value.trim() : '';
+            if (txtArea) txtArea.disabled = true;
+
+            if (studentText === '') {
+              incorrectCount++;
+              promptBadge.innerHTML = `
+                <span class="evaluation-badge-right eval-incorrect" style="background: rgba(239, 68, 68, 0.08); color: var(--color-danger); border: 1px solid var(--color-danger); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                  Unanswered (0 / ${q.points} pts)
+                </span>
+              `;
+            } else {
+              promptBadge.innerHTML = `
+                <span class="evaluation-badge-right eval-subjective" style="background: hsla(220, 75%, 62%, 0.15); color: var(--color-primary); border: 1px solid var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
+                  Syllabus Criteria Check
+                </span>
+              `;
+            }
+          }
+        });
+      });
+
+      // Calculate percentage based on scorable points
+      const percentage = autoScorablePoints > 0 ? Math.round((studentEarnedPoints / autoScorablePoints) * 100) : 0;
+
+      // Draw Results Hero Card
+      const resultsHeroHolder = document.getElementById('results-hero-holder');
+      resultsHeroHolder.innerHTML = `
+        <div class="results-hero-card">
+          <div class="radial-score-gauge" style="--percentage: ${percentage}%">
+            <div class="radial-score-inner">
+              <h3>${percentage}%</h3>
+              <span>Objective grade</span>
+            </div>
+          </div>
+          <h2>Assessment Sheet Complete!</h2>
+          <p>
+            You scored <strong>${studentEarnedPoints} out of ${autoScorablePoints} points</strong> on automated objective questions (${correctCount} correct, ${incorrectCount} incorrect). 
+            Review the step-by-step solutions, criteria rubrics, and detailed teacher-grade explanations mapped inside the parchment paper sheets below.
+          </p>
+        </div>
+      `;
+
+      // Hydrate score assignments blanks
+      const scoreDisplay = document.getElementById('score-assigned-display');
+      if (scoreDisplay) {
+        scoreDisplay.innerHTML = `<strong>${studentEarnedPoints} / ${autoScorablePoints} points</strong>`;
+      }
+
+      // Collect every student answer (MCQ selection or essay text) per question
+      const studentAnswers = [];
+      activeSharedState.sections.forEach(section => {
+        section.questions.forEach(q => {
+          if (q.questionType === 'multiple-choice' || q.questionType === 'true-false') {
+            const checkedInput = document.querySelector(`input[name="q-${q.id}"]:checked`);
+            studentAnswers.push({
+              questionId: q.id,
+              questionNumber: q.questionNumber,
+              questionType: q.questionType,
+              prompt: q.prompt,
+              correctAnswer: q.correctAnswer,
+              studentAnswer: checkedInput ? checkedInput.value : null,
+              isCorrect: checkedInput ? (checkedInput.value === q.correctAnswer) : false,
+              points: q.points,
+              earned: checkedInput && (checkedInput.value === q.correctAnswer) ? q.points : 0,
+              options: q.options
+            });
+          } else {
+            const txtArea = document.querySelector(`textarea[name="essay-${q.id}"]`);
+            const essayText = txtArea ? txtArea.value.trim() : '';
+            studentAnswers.push({
+              questionId: q.id,
+              questionNumber: q.questionNumber,
+              questionType: q.questionType,
+              prompt: q.prompt,
+              correctAnswer: q.correctAnswer,
+              studentAnswer: essayText || null,
+              isCorrect: null, // subjective — needs human grading
+              points: q.points,
+              earned: 0,
+              rubric: q.rubric || []
+            });
+          }
+        });
+      });
+
+      // Send student submissions back to backend server database
+      const dateVal = new Date().toISOString().substring(0, 10);
+
+      if (globalShareId) {
+        fetch(`/api/v1/share/${globalShareId}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            candidateName,
+            rollNumber,
+            date: dateVal,
+            score: studentEarnedPoints,
+            totalPoints: autoScorablePoints,
+            percentage: percentage,
+            answers: studentAnswers
+          })
+        })
+        .then(res => {
+          if (!res.ok) console.warn("Submissions record failed to register on the server.");
+          else console.log("Student quiz grade saved successfully.");
+        })
+        .catch(err => console.error("Network error saving student score:", err));
+      }
+
+      // Scroll smoothly to Results
+      resultsHeroHolder.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>
